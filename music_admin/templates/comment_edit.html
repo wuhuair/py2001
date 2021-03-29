@@ -1,0 +1,105 @@
+﻿{% extends "template.html" %}
+{% block body %}
+        <div class="single-product-tab-area mg-b-30">
+            <!-- Single pro tab review Start-->
+            <div class="single-pro-review-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="review-tab-pro-inner">
+                                <ul id="myTab3" class="tab-review-design">
+                                    <li class="active"><a href="#description"><i class="icon nalika-edit" aria-hidden="true"></i>评论</a></li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content custom-product-edit">
+                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                                        <form action="/comment_edit" id="loginForm" method="post">
+                            <div class="row">
+                                <input type="hidden" name="c_id" value="{{ comment.c_id }}">
+                                <input type="hidden" name="key" value="{{ key }}">
+                                <input type="hidden" name="pindex" value="{{ pindex }}">
+                                <div class="form-group col-lg-12">
+                                    <label>用户名</label>
+                                    <input type="hidden" name="u_id" value="{{ comment.u_id.u_id }}">
+                                    <input class="form-control" name="login_name" style="background:#152036;" value="{{ login_name }}" readonly>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <label>商品名</label>
+                                    <input type="hidden" name="p_id" value="{{ comment.p_id.p_id }}">
+                                    <input class="form-control" name="product_name" style="background:#152036;" value="{{ product_name }}" readonly>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <label>评论时间</label>
+                                    <input class="form-control" name="c_time" style="background:#152036;" value="{{ comment.c_time | date:"Y-m-d H:i:s" }}" readonly>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <label>评论内容</label>
+                                    <input class="form-control" name="c_content" style="background:#152036;" value="{{ comment.c_content }}">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <input type='submit' class="btn btn-success loginbtn" value="保存">
+                                <a class="btn btn-default" href="javascript:" onclick="re_comment_list('{{ key }}','{{ pindex }}')">取消</a>
+                            </div>
+                        </form>
+                                        <script>
+                                             function re_comment_list(key,pindex){
+                                                    window.location.href = "comment_list?key="+key+"&pindex="+pindex;
+                                             }
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+    function re_product_list(key,pindex){
+        window.location.href = "product_list?key="+key+"&pindex="+pindex;
+    }
+
+    function uploadImages() {
+        var targetUrl = $("#imgs").attr("action");
+        var data = new FormData($( "#imgs" )[0]);
+        $.ajax({
+         type:'post',
+         url:targetUrl,
+         cache: false,    //上传文件不需缓存
+         processData: false, //需设置为false。因为data值是FormData对象，不需要对数据做处理
+         contentType: false, //需设置为false。因为是FormData对象，且已经声明了属性enctype="multipart/form-data"
+         data:data,
+         dataType:'json',
+         success:function(data){
+           alert('文件上传成功');
+           var arr = eval(data["urls"]);
+           var pimgs = $('#pimgs').val();  //$('#pimgs').val()+","
+           for(var i in arr){
+               str = '<div class="col-lg-4" name="'+arr[i]+'">' +
+                   '<div class="pro-edt-img">' +
+                   '<img src="/static'+arr[i]+'" alt="" style="width:200px;height:200px">' +
+                   '</div>' +
+                   '<div class="product-edt-remove">' +
+                   '<button type="button" onclick="remove_product_img(\''+arr[i]+'\')" class="btn btn-ctl-bt waves-effect waves-light">移除' +
+                   '<i class="fa fa-times" aria-hidden="true"></i>' +
+                   '</button>' +
+                   '</div>' +
+                   '</div>';
+               $('#row_img').append(str);
+               pimgs += arr[i] + ",";
+           }
+            $('#pimgs').val(pimgs);
+         },
+         error:function(){
+          alert("文件上传失败")
+         }
+        })
+    }
+    
+    function remove_product_img(img) {
+        $('div[name="'+img+'"]').remove();
+        var newimgs = $('#pimgs').val().replace(img+",","");
+        $('#pimgs').val(newimgs);
+    }
+    </script>
+{% endblock %}

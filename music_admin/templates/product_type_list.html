@@ -1,0 +1,88 @@
+    {% extends "template.html" %}
+{% block search %}
+    <form role="search" class="" id="searchForm" action="/index" method="get">
+    <input type="text" placeholder="搜索" class="form-control" name="key" value="{{ key }}" id="key">
+    <a href="javascript:" onclick="searchByKey()"><i class="fa fa-search"></i></a>
+    </form>
+    <script>
+    function searchByKey() {
+        var form = $("#searchForm");
+        form.submit();
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+        <div class="product-status mg-b-30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="product-status-wrap">
+                            <h4>耳机类型列表</h4>
+                            <div class="add-product">
+                                <a href="javascript:to_product_type_add({{ page.number }})">添加商品类型</a>
+                            </div>
+                            <table>
+                                <tr>
+                                    <th>编号</th>
+                                    <th>类型</th>
+                                    <th>操作</th>
+
+                                </tr>
+                                {% for product in page.object_list %}
+                                <tr>
+                                    <td>{{ product.pt_id }}</td>
+                                    <td>{{ product.pt_name }}</td>
+                                    <td>
+                                        <button data-toggle="tooltip" title="编辑" class="pd-setting-ed" onclick="to_product_type_edit('{{ product.pt_id }}','{{ key }}','{{ page.number }}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                        <button data-toggle="tooltip" title="删除" class="pd-setting-ed" href="javascript:" onclick="productTypeDelete('{{ product.pt_id }}','{{ key }}','{{ page.number }}')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </table>
+                            <div class="custom-pagination">
+								<ul class="pagination">
+                                    {% if page.has_previous %}
+                                        <li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductTypeByPage('1')">首页</a></li>
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductTypeByPage('{{ page.previous_page_number }}')">上一页</a></li>
+                                    {% endif %}
+                                   {% for num in page.paginator.page_range %}
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductTypeByPage('{{ num }}')">{{ num }}</a></li>
+									{% endfor %}
+                                   {% if page.has_next %}
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductTypeByPage('{{ page.next_page_number }}')">下一页</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductTypeByPage('{{ page.paginator.num_pages }}')">尾页</a></li>
+                                    {% endif %}
+								</ul>
+                            <script>
+                                function selectProductTypeByPage(page) {
+                                    var key = $("#key").val();
+                                    if (key == ""){
+                                        window.location.href="/index?pindex="+page;
+                                    }
+                                    else{
+                                        window.location.href="/index?pindex="+page+"&key="+key;
+                                    }
+                                }
+                                function productTypeDelete(id,key,pindex){
+                                        if(confirm("确定删除吗？")){
+                                            window.location.href="/product_type_del?id="+id+"&key="+key+"&pindex="+pindex;
+                                        }
+                                    }
+                                function to_product_type_edit(id,key,pindex) {
+                                    window.location.href="/to_product_type_edit?pt_id="+id+"&key="+key+"&pindex="+pindex;
+                                }
+                                function to_product_type_add(pindex) {
+                                    var key = $("#key").val();
+                                    window.location.href="/to_product_type_add?key="+key+"&pindex="+pindex;
+
+                                }
+                            </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

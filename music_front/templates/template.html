@@ -1,0 +1,165 @@
+
+<html>
+<head>
+<title>悦享无限</title>
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //Custom Theme files -->
+<link href="/static/css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+<link href="/static/css/style.css" type="text/css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="/static/css/flexslider.css" type="text/css" media="screen" />
+<!-- js -->
+<script src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-3.1.1.min.js"></script>
+    <script src="/static/js/imagezoom.js"></script>
+<!-- //js -->
+<!-- cart -->
+<script src="/static/js/simpleCart.min.js"> </script>
+<!-- cart -->
+    <!-- FlexSlider -->
+<script defer src="/static/js/jquery.flexslider.js"></script>
+<link rel="stylesheet" href="/static/css/flexslider.css" type="text/css" media="screen" />
+<script>
+	// Can also be used with $(document).ready()
+	$(window).load(function() {
+	  $('.flexslider').flexslider({
+		animation: "slide",
+		controlNav: "thumbnails"
+	  });
+	});
+</script>
+<!--//FlexSlider -->
+</head>
+<body>
+	<!--header-->
+	<div class="header">
+		<div class="container">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<h1 class="navbar-brand"><a  href="/first">悦享无限</a></h1>
+				</div>
+				<!--navbar-header-->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li><a href="/first" class="active">首页</a></li>
+                        {% for product in products %}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ product.spt_name }}<b class="caret"></b></a>
+							<ul class="dropdown-menu multi-column columns-4">
+								<div class="row">
+									<div class="col-sm-3">
+										<h4>使用方式</h4>
+										<ul class="multi-column-dropdown">
+                                           {% for use in product.spt_use %}
+											<li><a class="list" href="/products?spt_id={{ product.spt_id }}&use={{ use }}">{{ use }}</a></li>
+											{% endfor %}
+										</ul>
+									</div>
+									<div class="col-sm-3">
+										<h4>插口类型</h4>
+										<ul class="multi-column-dropdown">
+                                           {% for jack in product.spt_jack %}
+											<li><a class="list" href="/products?spt_id={{ product.spt_id }}&jack={{ jack }}">{{ jack }}</a></li>
+											{% endfor %}
+										</ul>
+									</div>
+									<div class="col-sm-3">
+										<h4>品牌</h4>
+										<ul class="multi-column-dropdown">
+                                           {% for brand in product.spt_brand %}
+											<li><a class="list" href="/products?spt_id={{ product.spt_id }}&brand={{ brand }}">{{ brand }}</a></li>
+											{% endfor %}
+										</ul>
+									</div>
+									<div class="col-sm-3">
+										<h4>线长</h4>
+										<ul class="multi-column-dropdown">
+                                           {% for length in product.spt_length %}
+											<li><a class="list" href="/products?spt_id={{ product.spt_id }}&length={{ length }}">{{ length }}</a></li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</ul>
+						</li>
+                        {% endfor %}
+					</ul>
+					<!--/.navbar-collapse-->
+				</div>
+				<!--//navbar-header-->
+			</nav>
+			<div class="header-info">
+				<div class="header-right search-box">
+					<a href="#"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+					<div class="search">
+						<form class="navbar-form" action="/search" method="post">
+							<input type="text" class="form-control" name="key">
+							<button type="submit" class="btn btn-default" aria-label="Left Align">
+								搜索
+							</button>
+						</form>
+					</div>
+				</div>
+                {% if username == None and u_id == None %}
+				<div class="header-right login">
+					<a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+					<div id="loginBox">
+						<form id="loginForm" action="/login" method="post">
+							<fieldset id="body">
+								<fieldset>
+									<label for="username">账号</label>
+									<input type="text" name="username" id="username" value="">
+								</fieldset>
+								<fieldset>
+									<label for="password">密码</label>
+									<input type="password" name="password" id="password" value="">
+								</fieldset>
+								<input type="submit" id="login" value="登录">
+							</fieldset>
+							<p>新用户? <a class="sign" href="http://127.0.0.1:8000/register">注册</a></p>
+						</form>
+					</div>
+				</div>
+                    {% else %}
+                    <div class="header-right login">
+					<a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+					<div id="loginBox">
+						<form id="loginForm" action="/cancel">
+							<fieldset id="body">
+								<fieldset>
+									<label for="username">{{ username }}</label>
+								</fieldset>
+								<input type="submit" id="cancel" value="注销">
+							</fieldset>
+						</form>
+					</div>
+				</div>
+                {% endif %}
+				<div class="header-right cart">
+					<a href="/cart"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></a>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+	<!--//header-->
+
+    {% block main %}{% endblock %}
+
+	<div class="footer-bottom">
+		<div class="container">
+			<p>悦享无限.<a target="_blank" href="">完全诗意的信仰</a></p>
+		</div>
+	</div>
+</body>
+</html>

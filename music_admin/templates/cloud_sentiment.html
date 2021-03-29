@@ -1,0 +1,70 @@
+﻿{% extends "template.html" %}
+{% block body %}
+        <div class="single-product-tab-area mg-b-30">
+            <!-- Single pro tab review Start-->
+            <div class="single-pro-review-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="review-tab-pro-inner">
+                                <ul id="myTab3" class="tab-review-design">
+                                    <li class="active"><a href="#description"><i class="icon nalika-edit" aria-hidden="true"></i>查询对应商品的评论分析与词云</a></li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content custom-product-edit">
+                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="review-content-section">
+
+                                                    {% for product in products %}
+                                                    <div class="input-group mg-b-pro-edt">
+                                                        <a class="form-control" href="javascript:" style="width:1000px;background:#152036;" onclick="cloud('{{ product.p_id }}')">{{ product.p_name }}</a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            <style>
+                                                #cloudimg {max-width:200%;height:400px;}
+                                            </style>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                               <img src="http://127.0.0.1:8000/static/cloud/{{ p_id }}.jpg" alt="" width="1000" height="800" id="cloudimg"/>
+                                                </div>
+{#                                            {% if products == None or products == "" %}#}
+{#                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">#}
+{#                                                <div class="product-status-wrap">#}
+{#                                               <table bgcolor="red">#}
+{#                                                   <tr><td>好评：</td><td>{{ x }}</td></tr>#}
+{#                                                   <tr><td>中评：</td><td>{{ y }}</td></tr>#}
+{#                                                   <tr><td>差评：</td><td>{{ z }}</td></tr>#}
+{#                                                   <tr><td>总评：</td><td>{{ s }}</td></tr>#}
+{#                                               </table>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            {% endif %}#}
+                                            <script>
+                                                function cloud(p_id) {
+                                                    window.location.href = "/cloud?p_id="+p_id;
+                                                }
+                                            </script>
+                                            </div>
+                                        {% if products == None or products == "" %}
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="product-status-wrap">
+                                               <table bgcolor="red">
+                                                   <tr><td>好评：</td><td>{{ x }}</td></tr>
+                                                   <tr><td>中评：</td><td>{{ y }}</td></tr>
+                                                   <tr><td>差评：</td><td>{{ z }}</td></tr>
+                                                   <tr><td>总评：</td><td>{{ s }}</td></tr>
+                                               </table>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

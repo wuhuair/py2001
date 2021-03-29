@@ -1,0 +1,164 @@
+{% extends "template.html" %}
+{% block search %}
+    <form role="search" class="" id="searchForm" action="/product_list" method="get">
+    <input type="text" placeholder="搜索" class="form-control" name="key" value="{{ key }}" id="key">
+    <a href="javascript:" onclick="searchByKey()"><i class="fa fa-search"></i></a>
+    </form>
+    <script>
+    function searchByKey() {
+        var form = $("#searchForm");
+        form.submit();
+    }
+    </script>
+{% endblock %}
+{% block body %}
+        <div class="product-status mg-b-30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="product-status-wrap">
+                            <h4>商品列表</h4>
+                            <div class="add-product">
+                                <a href="javascript:;" onclick="to_product_add('{{ page.number }}')">添加商品</a>
+                                <a href="javascript:;" onclick="product_batch_del('{{ page.number }}')">批量删除</a>
+                                <a href="javascript:;" onclick="product_up_down('{{ page.number }}','下架')">批量下架</a>
+                                <a href="javascript:;" onclick="product_up_down('{{ page.number }}','上架')">批量上架</a>
+                            </div>
+                            <table width="500px" class="mytable">
+                                <tr>
+                                    <th><input type="checkbox" onclick="product_check()" id="allcheck">全选</th>
+                                    <th>编号</th>
+                                    <th>图片</th>
+                                    <th>名称</th>
+                                    <th>原价</th>
+                                    <th>售格</th>
+                                    <th>邮费</th>
+                                    <th>库存</th>
+                                    <th>尺寸</th>
+                                    <th>上/下架</th>
+                                    <th>热卖</th>
+                                    <th>推荐</th>
+                                    <th>类型</th>
+                                    <th>编辑</th>
+                                    <th>删除</th>
+                                </tr>
+                                {% for product in page.object_list %}
+                                <tr>
+                                    <td><input type="checkbox" class="singlecheckbox" name="{{ product.p_id }}"></td>
+                                    <td>{{ product.p_id }}</td>
+                                    <td><img src="/static{{ product.p_imgs }}" alt="" /></td>
+                                    <td>{{ product.p_name }}</td>
+                                    <td>{{ product.p_cost_price }}</td>
+                                    <td>{{ product.p_sale_prict }}</td>
+                                    <td>{{ product.p_postage }}</td>
+                                    <td>{{ product.p_sku }}</td>
+                                    <td>{{ product.p_size }}</td>
+                                    <td>{{ product.p_up_down }}</td>
+                                    <td>{{ product.p_hot }}</td>
+                                    <td>{{ product.p_recommend }}</td>
+                                    <td>{{ product.pt_id.pt_name }}</td>
+                                    <td>
+                                        <button data-toggle="tooltip" title="编辑" class="pd-setting-ed" onclick="to_product_edit('{{ product.p_id }}','{{ key }}','{{ page.number }}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </td>
+                                    <td>
+                                        <button data-toggle="tooltip" title="删除" class="pd-setting-ed" href="javascript:" onclick="productDelete('{{ product.p_id }}','{{ key }}','{{ page.number }}')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </table>
+                            <div class="custom-pagination">
+								<ul class="pagination">
+                                    {% if page.has_previous %}
+                                        <li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductByPage('1')">首页</a></li>
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductByPage('{{ page.previous_page_number }}')">上一页</a></li>
+                                    {% endif %}
+                                   {% for num in page.paginator.page_range %}
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductByPage('{{ num }}')">{{ num }}</a></li>
+									{% endfor %}
+                                   {% if page.has_next %}
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductByPage('{{ page.next_page_number }}')">下一页</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:" onclick="selectProductByPage('{{ page.paginator.num_pages }}')">尾页</a></li>
+                                    {% endif %}
+								</ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+    function selectProductByPage(page) {
+        var key = $("#key").val();
+        if (key == ""){
+            window.location.href="/product_list?pindex="+page;
+        }else{
+            window.location.href="/product_list?pindex="+page+"&key="+key;
+        }
+    }
+    function to_product_edit(id,key,pindex) {
+        window.location.href="/to_product_edit?p_id="+id+"&key="+key+"&pindex="+pindex;
+    }
+    function productDelete(id,key,pindex) {
+         if(confirm("确定删除吗？")){
+              window.location.href="/product_del?id="+id+"&key="+key+"&pindex="+pindex;
+         }
+    }
+    function product_check() {
+        var flag = $("#allcheck").get(0).checked;
+        if(flag){
+            $(".singlecheckbox").prop("checked",true);
+        }else{
+            $(".singlecheckbox").prop("checked",false);
+        }
+    }
+    function product_batch_del(pindex) {
+        if(confirm("确定删除吗？")){
+        var str = "";
+        var inputs = $(".singlecheckbox");
+        var flag = false;
+        for(i in inputs){
+            if(inputs[i].checked){
+                str += inputs[i].name + "-";
+                flag = true;
+            }
+        }
+        if(!flag){
+            alert("请至少勾选一个");
+            return false;
+        }
+        var key = $("#key").val();
+        window.location.href="product_batch_del?ids="+str+"&key="+key+"&pindex="+pindex;
+    }
+    }
+    function product_up_down(page,state){
+        var tip = "";
+        if(state == '下架'){
+            tip = "确定下架吗？"
+        }else{
+            tip = "确定上架吗？"
+        }
+        if(confirm(tip)){
+        var str = "";
+        var inputs = $(".singlecheckbox");
+        var flag = false;
+        for(i in inputs){
+            if(inputs[i].checked){
+                str += inputs[i].name + "-";
+                flag = true;
+            }
+        }
+        if(!flag){
+            alert("请至少勾选一个");
+            return false;
+        }
+        var key = $("#key").val();
+        window.location.href="product_up_down?ids="+str+"&key="+key+"&pindex="+page+"&state="+state;
+    }
+    }
+    function to_product_add(page){
+        var key = $("#key").val();
+        window.location.href="/to_product_add?key="+key+"&pindex="+page;
+    }
+    </script>
+{% endblock %}

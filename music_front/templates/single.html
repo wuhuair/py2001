@@ -1,0 +1,117 @@
+{% extends  "template.html" %}
+
+{% block main %}
+
+	<!--//single-page-->
+	<div class="single">
+		<div class="container">
+			<div class="single-grids">				
+				<div class="col-md-4 single-grid">		
+					<div class="flexslider">
+						<ul class="slides">
+                            {% for img in product_view.p_imgs %}
+							<li data-thumb="http://127.0.0.1:8000/static{{ img }}">
+								<div class="thumb-image"> <img src="http://127.0.0.1:8000/static{{ img }}" data-imagezoom="true" class="img-responsive"> </div>
+							</li>
+                            {% endfor %}
+						</ul>
+					</div>
+				</div>	
+				<div class="col-md-4 single-grid simpleCart_shelfItem">		
+					<h3>{{ product_view.p_name }}</h3>
+					<p>{{ product_view.p_name }}</p>
+					<ul class="size">
+						<h3>型号</h3>
+                        {% if product_view.p_size == "0" %}
+							<li><a href="javascript:">蓝牙</a></li>
+                            {% else %}
+                            <li><a href="javascript:">{{ product_view.p_size }}米</a></li>
+                        {% endif %}
+					</ul>
+					<div class="galry">
+						<div class="prices">
+							<h5 class="item_price">{{ product_view.p_sale_prict }}元</h5>
+						</div>
+
+						<div class="clearfix"></div>
+					</div>
+					<p class="qty"> 数量 :  </p><input min="1" type="number" id="quantity" name="quantity" value="1" class="form-control input-small">
+					<div class="btn_form">
+						<a href="javascript:" class="add-cart item_add" onclick="addCart('{{ product_view.p_id }}','{{ product_view.p_sale_prict }}')">添加购物车</a>
+					</div>
+				</div>
+
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+	<!-- collapse -->
+	<div class="collpse tabs">
+		<div class="container">
+			<div class="panel-group collpse" id="accordion" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="headingThree">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+								相关评论
+							</a>
+						</h4>
+					</div>
+					<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+						<div class="panel-body">
+                        <table class="mytable" width="1138px">
+                        <tr>
+                            <th width="140px">用户名</th>
+                            <th width="800px">评论内容</th>
+                            <th width="100px">评论时间</th>
+                            <th width="98px"></th>
+                        </tr>
+                        <form action="/addcomment" method="post">
+                            {% for comment in comments %}
+                                {% if comment.u_id.u_id == u_id %}
+                                    <input type="hidden" value="{{ comment.c_id }}" name="c_id">
+                                <tr>
+                                <td>{{ comment.u_id.u_login_name }}</td>
+                                <td><input type="text" name="content" value="{{ comment.c_content }}" style="width:800px;"></td>
+                                <td>{{ comment.c_time | date:"H:i:s" }}</td>
+                                <td><input type="submit" value="提交"></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                <td>{{ comment.u_id.u_login_name }}</td>
+                                <td>{{ comment.c_content }}</td>
+                                <td>{{ comment.c_time | date:"H:i:s" }}</td>
+                                <td></td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </form>
+                        </table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--//collapse -->
+    <script>
+                function addCart(pid,prict) {
+                    var quantity = $('#quantity').val();
+                    window.location.href = "/addcart?pid="+pid+"&prict="+prict+"&count="+quantity;
+                }
+</script>
+
+    <style type="text/css">
+.mytable {
+    table-layout: fixed;
+}
+
+.mytable tr td {
+    text-overflow: ellipsis; /* for IE */
+    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left
+}
+</style>
+{% endblock %}

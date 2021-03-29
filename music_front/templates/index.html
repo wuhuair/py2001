@@ -1,0 +1,101 @@
+{% extends "template.html" %}
+
+{% block main %}
+	<!--banner-->
+	<div class="banner">
+		<div class="container">
+			<h2 class="hdng">euphonious <span>music</span> for u</h2>
+			<p>Our best music make your day special</p>
+			<a href="/single?id={{ hot_0.p_id }}">SHOP NOW</a>
+			<div class="banner-text">			
+				<img src="http://127.0.0.1:8000/static{{ hot_0.p_imgs }}" alt=""/>
+			</div>
+		</div>
+	</div>			
+	<!--//banner-->
+	<!--gallery-->
+	<div class="gallery">
+		<div class="container">
+			<div class="gallery-grids">
+				<div class="col-md-8 gallery-grid glry-one">
+					<a href="javascript:"><img src="http://127.0.0.1:8000/static{{ hot_1.p_imgs }}" class="img-responsive" alt=""/>
+						<div class="gallery-info">
+							<p><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>查看</p>
+							<a class="shop" href="/single?id={{ hot_1.p_id }}">立即查看</a>
+							<div class="clearfix"> </div>
+						</div>
+					</a>
+					<div class="galy-info">
+						<p>{{ hot_1.p_name }}</p>
+						<div class="galry">
+							<div class="prices">
+								<h5 class="item_price">{{ hot_1.p_sale_prict }}元/个</h5>
+							</div>
+							<div class="rating">
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+							</div>						
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 gallery-grid glry-two">
+					<a href="javascript:"><img src="http://127.0.0.1:8000/static{{ hot_2.p_imgs }}" class="img-responsive" alt=""/>
+						<div class="gallery-info galrr-info-two">
+							<p><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>查看</p>
+							<a class="shop" href="/single?id={{ hot_2.p_id }}">立即查看</a>
+							<div class="clearfix"> </div>
+						</div>
+					</a>
+					<div class="galy-info">
+						<p>{{ hot_2.p_name }}</p>
+						<div class="galry">
+							<div class="prices">
+								<h5 class="item_price">{{ hot_2.p_sale_prict }}元/个</h5>
+							</div>
+							<div class="rating">
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+							</div>						
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+                {% for product in hot_products %}
+				<div class="col-md-3 gallery-grid ">
+					<a href="javascript:"><img src="http://127.0.0.1:8000/static{{ product.p_imgs }}" class="img-responsive" alt=""/>
+						<div class="gallery-info">
+							<p><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>查看</p>
+							<a class="shop" href="/single?id={{ product.p_id }}">立即查看</a>
+							<div class="clearfix"> </div>
+						</div>
+					</a>
+					<div class="galy-info">
+						<p>{{ product.p_name }}</p>
+						<div class="galry">
+							<div class="prices">
+								<h5 class="item_price">{{ product.p_sale_prict }}元/个</h5>
+							</div>
+							<div class="rating">
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+								<span>☆</span>
+							</div>						
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+                {% endfor %}
+
+			</div>	
+		</div>
+	</div>
+{% endblock %}

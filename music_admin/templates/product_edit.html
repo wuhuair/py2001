@@ -1,0 +1,197 @@
+﻿{% extends "template.html" %}
+{% block body %}
+        <div class="single-product-tab-area mg-b-30">
+            <!-- Single pro tab review Start-->
+            <div class="single-pro-review-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="review-tab-pro-inner">
+                                <ul id="myTab3" class="tab-review-design">
+                                    <li class="active"><a href="#description"><i class="icon nalika-edit" aria-hidden="true"></i>基本信息</a></li>
+                                    <li><a href="#reviews"><i class="icon nalika-picture" aria-hidden="true"></i>图片</a></li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content custom-product-edit">
+                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                                        <form action="/product_edit" method="post">
+
+                                        <input type="hidden" id="pimgs" value="{{ product.p_imgs }}" name="p_imgs">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="review-content-section">
+                                                        <input type="hidden" name="key" value="{{ key }}">
+                                                        <input type="hidden" name="pindex" value="{{ pindex }}">
+                                                        <input type="hidden" name="p_id" value="{{ product.p_id }}">
+                                                    <div class="input-group mg-b-pro-edt">
+                                                        <span class="input-group-addon"></span>
+                                                        <input type="text" name="p_name" class="form-control" value="{{ product.p_name }}" placeholder="商品名称">
+                                                    </div>
+                                                    <div class="input-group mg-b-pro-edt">
+                                                        <span class="input-group-addon"></span>
+                                                        <input type="text" name="p_cost_price" class="form-control" value="{{ product.p_cost_price }}" placeholder="成本价格">
+                                                    </div>
+                                                    <div class="input-group mg-b-pro-edt">
+                                                        <span class="input-group-addon"></span>
+                                                        <input type="text" name="p_sale_prict" class="form-control" value="{{ product.p_sale_prict }}" placeholder="售卖价格">
+                                                    </div>
+                                                    <div class="input-group mg-b-pro-edt">
+                                                        <span class="input-group-addon"></span>
+                                                        <input type="text" name="p_postage" class="form-control" value="{{ product.p_postage }}" placeholder="邮费">
+                                                    </div>
+                                                    <div class="input-group mg-b-pro-edt">
+                                                        <span class="input-group-addon"></span>
+                                                        <input type="text" name="p_sku" class="form-control" value="{{ product.p_sku }}" placeholder="库存">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="review-content-section">
+                                                <div class="input-group mg-b-pro-edt">
+                                                    <span class="input-group-addon"></span>
+{#                                                    <input type="text" name="p_postage" class="form-control" value="{{ product.p_size }}" placeholder="尺寸">#}
+                                                    <select name="p_size" class="form-control pro-edt-select form-control-primary">
+															<option value="0">尺寸</option>
+                                                            <option value="0" {% if product.p_size == '0' %} selected {% endif %}>蓝牙</option>
+															<option value="0.5" {% if product.p_size == '0.5' %} selected {% endif %}>0.5米</option>
+															<option value="1" {% if product.p_size == '1' %} selected {% endif %}>1米</option>
+															<option value="1.5" {% if product.p_size == '1.5' %} selected {% endif %}>1.5米</option>
+															<option value="2" {% if product.p_size == '2' %} selected {% endif %}>2米</option>
+                                                    </select>
+                                                </div>
+{#                                                    <div class="input-group mg-b-pro-edt">#}
+{#                                                        <span class="input-group-addon"></span>#}
+{#                                                        <input type="text" name="p_weight" class="form-control" value="{{ product.p_weight }}" placeholder="重量">#}
+{#                                                    </div>#}
+                                                <div class="input-group mg-b-pro-edt">
+                                                    <span class="input-group-addon"></span>
+                                                    <select name="p_hot" class="form-control pro-edt-select form-control-primary">
+															<option value="是">热卖</option>
+															<option value="是" {% if product.p_hot == '是' %} selected {% endif %}>是</option>
+															<option value="否" {% if product.p_hot == '否' %} selected {% endif %}>否</option>
+														</select>
+                                                </div>
+                                                <div class="input-group mg-b-pro-edt">
+                                                    <span class="input-group-addon"></span>
+                                                    <select name="p_recommend" class="form-control pro-edt-select form-control-primary">
+															<option value="是">推荐</option>
+															<option value="是" {% if product.p_recommend == '是' %} selected {% endif %}>是</option>
+															<option value="否" {% if product.p_recommend == '否' %} selected {% endif %}>否</option>
+														</select>
+                                                </div>
+                                                <div class="input-group mg-b-pro-edt">
+                                                <span class="input-group-addon"></span>
+                                                    <select name="p_product_type" class="form-control pro-edt-select form-control-primary">
+															<option value="1">商品类型</option>
+                                                        {% for product_type in product_types %}
+															<option value="{{ product_type.pt_id }}" {% if product.pt_id.pt_id == product_type.pt_id %} selected {% endif %}>{{ product_type.pt_name }}</option>
+                                                        {% endfor %}
+														</select>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="text-center custom-pro-edt-ds">
+                                                    <input type="submit" class="btn btn-ctl-bt waves-effect waves-light m-r-10" value="保存">
+                                                    <button type="button" class="btn btn-ctl-bt waves-effect waves-light" onclick="re_product_list('{{ key }}','{{ pindex }}')">取消</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="product-tab-list tab-pane fade" id="reviews">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="review-content-section">
+                                                    <div class="row" id="row_img">
+
+                                                        <div class="col-lg-8" style="width: 99%;">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="product-edt-pix-wrap">
+                                                                        <form action="/uploadImages" method="post" enctype="multipart/form-data" id="imgs">
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-addon">选择图片：</span>
+                                                                            <input type="file" class="form-control" name="file" multiple="multiple" onchange="uploadImages()">
+                                                                        </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% for img in imgs %}
+                                                        <div class="col-lg-4" name="{{ img }}">
+                                                            <div class="pro-edt-img">
+                                                                <img src="/static{{ img }}" alt="" style="width:200px;height:200px">
+                                                            </div>
+                                                        <div class="product-edt-remove">' +
+                                                            <button type="button" onclick="remove_product_img('{{ img }}')" class="btn btn-ctl-bt waves-effect waves-light">移除
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                        </div>
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+    function re_product_list(key,pindex){
+        window.location.href = "product_list?key="+key+"&pindex="+pindex;
+    }
+
+    function uploadImages() {
+        var targetUrl = $("#imgs").attr("action");
+        var data = new FormData($( "#imgs" )[0]);
+        $.ajax({
+         type:'post',
+         url:targetUrl,
+         cache: false,    //上传文件不需缓存
+         processData: false, //需设置为false。因为data值是FormData对象，不需要对数据做处理
+         contentType: false, //需设置为false。因为是FormData对象，且已经声明了属性enctype="multipart/form-data"
+         data:data,
+         dataType:'json',
+         success:function(data){
+           alert('文件上传成功');
+           var arr = eval(data["urls"]);
+           var pimgs = $('#pimgs').val();  //$('#pimgs').val()+","
+           for(var i in arr){
+               str = '<div class="col-lg-4" name="'+arr[i]+'">' +
+                   '<div class="pro-edt-img">' +
+                   '<img src="/static'+arr[i]+'" alt="" style="width:200px;height:200px">' +
+                   '</div>' +
+                   '<div class="product-edt-remove">' +
+                   '<button type="button" onclick="remove_product_img(\''+arr[i]+'\')" class="btn btn-ctl-bt waves-effect waves-light">移除' +
+                   '<i class="fa fa-times" aria-hidden="true"></i>' +
+                   '</button>' +
+                   '</div>' +
+                   '</div>';
+               $('#row_img').append(str);
+               pimgs += arr[i] + ",";
+           }
+            $('#pimgs').val(pimgs);
+         },
+         error:function(){
+          alert("文件上传失败")
+         }
+        })
+    }
+    
+    function remove_product_img(img) {
+        $('div[name="'+img+'"]').remove();
+        var newimgs = $('#pimgs').val().replace(img+",","");
+        $('#pimgs').val(newimgs);
+    }
+    </script>
+{% endblock %}

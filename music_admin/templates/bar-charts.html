@@ -1,0 +1,171 @@
+﻿{% extends "template.html" %}
+{% block body %}
+
+        <!-- Charts Start-->
+        <div class="charts-area mg-tb-15">
+            <div class="container-fluid">
+                <div class="row">
+
+                    <div id="container" class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="container"></div>
+
+<script language="JavaScript">
+    var a = [
+    {% for pt_name in pt_names %}
+        "{{ pt_name }}",
+    {% endfor %}];
+
+$(document).ready(function(c){
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '每种类型的商品数量'
+   };
+   var xAxis = {
+      categories: a,
+      crosshair: true
+   };
+   var yAxis = {
+      min: 0,
+      title: {
+         text: '商品数量'
+      }
+   };
+   var tooltip = {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.1f} 件</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.2,
+         borderWidth: 0
+      }
+   };
+   var credits = {
+      enabled: false
+   };
+
+   var series= [{
+        name: '',
+            data: [{% for pt_num in pt_nums %}{{ pt_num }},{% endfor %}]
+        }];
+
+   var json = {};
+   json.chart = chart;
+   json.title = title;
+   {#json.subtitle = subtitle;#}
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;
+   json.series = series;
+   json.plotOptions = plotOptions;
+   json.credits = credits;
+   $('#container').highcharts(json);
+
+});
+</script>
+
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="container1"></div>
+                <script language="JavaScript">
+$(document).ready(function() {
+   var chart = {
+       plotBackgroundColor: null,
+       plotBorderWidth: null,
+       plotShadow: false
+   };
+   var title = {
+      text: '设备价格所占比例'
+   };
+   var tooltip = {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+   };
+   var plotOptions = {
+      pie: {
+         allowPointSelect: true,
+         cursor: 'pointer',
+         dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
+            style: {
+               color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+            }
+         }
+      }
+   };
+   var series= [{
+      type: 'pie',
+      name: '所占份额',
+      data: [['0-100元', {{ a }}], ['100-300元', {{ b }}], ['300-600元',{{ c }}], ['600-1000元', {{ d }}], ['1000元以上', {{ e }}]]
+   }];
+
+   var json = {};
+   json.chart = chart;
+   json.title = title;
+   json.tooltip = tooltip;
+   json.series = series;
+   json.plotOptions = plotOptions;
+   $('#container1').highcharts(json);
+});
+</script>
+                </div>
+                <div class="row" id="container2"></div>
+            <script language="JavaScript">
+$(document).ready(function() {
+   var title = {
+      text: '用户消费情况'
+   };
+   var xAxis = {
+      categories: ['一月', '二月', '三月', '四月', '五月', '六月',
+         '七月', '八月', '九月', '十月', '十一月', '十二月']
+   };
+   var yAxis = {
+      title: {
+         text: '消费额（元）'
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+
+   var tooltip = {
+      valueSuffix: '元'
+   };
+
+   var legend = {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      borderWidth: 0
+   };
+
+   var series =  [
+      {
+         name: '{{ login_username }}',
+         data: [{% for data in datas %}{{ data }},{% endfor %}]
+      }
+   ];
+
+   var json = {};
+
+   json.title = title;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;
+   json.tooltip = tooltip;
+   json.legend = legend;
+   json.series = series;
+
+   $('#container2').highcharts(json);
+});
+</script>
+            </div>
+        </div>
+
+
+{% endblock %}

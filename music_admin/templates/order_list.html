@@ -1,0 +1,158 @@
+{% extends "template.html" %}
+{% block search %}
+    <form role="search" class="" id="searchForm" action="/order_list" method="get">
+    <input type="text" placeholder="搜索" class="form-control" name="key" value="{{ key }}" id="key">
+    <a href="javascript:;" onclick="searchByKey()"><i class="fa fa-search"></i></a>
+    </form>
+    <script>
+    function searchByKey() {
+        var form = $("#searchForm");
+        form.submit();
+    }
+    </script>
+{% endblock %}
+{% block body %}
+        <div class="product-status mg-b-30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="product-status-wrap">
+                            <h4>订单列表</h4>
+                            <div class="add-product">
+{#                                <a href="javascript:;" onclick="to_product_add('{{ page.number }}')">添加商品</a>#}
+                                <a href="javascript:;" onclick="order_batch_del('{{ page.number }}')">批量删除</a>
+{#                                <a href="javascript:;" onclick="product_up_down('{{ page.number }}','下架')">批量下架</a>#}
+{#                                <a href="javascript:;" onclick="product_up_down('{{ page.number }}','上架')">批量上架</a>#}
+                            </div>
+                            <table width="500px" class="mytable">
+                                <tr>
+                                    <th><input type="checkbox" onclick="order_check()" id="allcheck">全选</th>
+                                    <th>编号</th>
+                                    <th>用户名</th>
+                                    <th>商品名</th>
+                                    <th>购买数量</th>
+                                    <th>购买价格</th>
+                                    <th>邮购地址</th>
+                                    <th>收货人</th>
+                                    <th>电话</th>
+                                    <th>删除</th>
+                                </tr>
+                                {% for order in page.object_list %}
+                                <tr>
+                                    <td><input type="checkbox" class="singlecheckbox" name="{{ order.o_id }}"></td>
+                                    <td>{{ order.o_id }}</td>
+                                    <td>{{ order.u_id.u_login_name }}</td>
+                                    <td>{{ order.p_id.p_name }}</td>
+                                    <td>{{ order.p_sale_prict }}</td>
+                                    <td>{{ order.o_count }}</td>
+                                    <td>{{ order.o_price }}</td>
+                                    <td>{{ order.o_address }}</td>
+                                    <td>{{ order.o_receiver }}</td>
+                                    <td>{{ order.o_phone }}</td>
+{#                                    <td>#}
+{#                                        <button data-toggle="tooltip" title="编辑" class="pd-setting-ed" onclick="to_product_edit('{{ product.p_id }}','{{ key }}','{{ page.number }}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>#}
+{#                                    </td>#}
+                                    <td>
+                                        <button data-toggle="tooltip" title="删除" class="pd-setting-ed" href="javascript:" onclick="orderDelete('{{ order.o_id }}','{{ key }}','{{ page.number }}')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </table>
+                            <div class="custom-pagination">
+								<ul class="pagination">
+                                    {% if page.has_previous %}
+                                        <li class="page-item"><a class="page-link" href="javascript:" onclick="selectOrderByPage('1')">首页</a></li>
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectOrderByPage('{{ page.previous_page_number }}')">上一页</a></li>
+                                    {% endif %}
+                                   {% for num in page.paginator.page_range %}
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectOrderByPage('{{ num }}')">{{ num }}</a></li>
+									{% endfor %}
+                                   {% if page.has_next %}
+									<li class="page-item"><a class="page-link" href="javascript:" onclick="selectOrderByPage('{{ page.next_page_number }}')">下一页</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:" onclick="selectOrderByPage('{{ page.paginator.num_pages }}')">尾页</a></li>
+                                    {% endif %}
+								</ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+    function selectOrderByPage(page) {
+        var key = $("#key").val();
+        if (key == ""){
+            window.location.href="/order_list?pindex="+page;
+        }else{
+            window.location.href="/order_list?pindex="+page+"&key="+key;
+        }
+    }
+
+    function to_product_edit(id,key,pindex) {
+        window.location.href="/to_product_edit?p_id="+id+"&key="+key+"&pindex="+pindex;
+    }
+
+    function orderDelete(id,key,pindex) {
+         if(confirm("确定删除吗？")){
+              window.location.href="/order_del?id="+id+"&key="+key+"&pindex="+pindex;
+         }
+    }
+    function order_check() {
+        var flag = $("#allcheck").get(0).checked;
+        if(flag){
+            $(".singlecheckbox").prop("checked",true);
+        }else{
+            $(".singlecheckbox").prop("checked",false);
+        }
+    }
+    function order_batch_del(pindex) {
+        if(confirm("确定删除吗？")){
+        var str = "";
+        var inputs = $(".singlecheckbox");
+        var flag = false;
+        for(i in inputs){
+            if(inputs[i].checked){
+                str += inputs[i].name + "-";
+                flag = true;
+            }
+        }
+        if(!flag){
+            alert("请至少勾选一个");
+            return false;
+        }
+        var key = $("#key").val();
+        window.location.href="order_batch_del?ids="+str+"&key="+key+"&pindex="+pindex;
+    }
+    }
+    function product_up_down(page,state){
+        var tip = "";
+        if(state == '下架'){
+            tip = "确定下架吗？"
+        }else{
+            tip = "确定上架吗？"
+        }
+        if(confirm(tip)){
+        var str = "";
+        var inputs = $(".singlecheckbox");
+        var flag = false;
+        for(i in inputs){
+            if(inputs[i].checked){
+                str += inputs[i].name + "-";
+                flag = true;
+            }
+        }
+        if(!flag){
+            alert("请至少勾选一个");
+            return false;
+        }
+        var key = $("#key").val();
+        window.location.href="product_up_down?ids="+str+"&key="+key+"&pindex="+page+"&state="+state;
+    }
+    }
+    function to_product_add(page){
+        var key = $("#key").val();
+        window.location.href="/to_product_add?key="+key+"&pindex="+page;
+    }
+    </script>
+{% endblock %}
